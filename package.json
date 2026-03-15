@@ -1,0 +1,24 @@
+{
+  "name": "asaltraining",
+  "version": "1.0.0",
+  "description": "This repository contains my practice work during the QA Automation Testing training.\r The training focuses on **Automation Testing**, where I will learn how to design and execute automated test cases using modern testing tools. The main automation tool used in this training is **Cypress**.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ghadasawallha04-collab/AsalTraining.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ghadasawallha04-collab/AsalTraining/issues"
+  },
+  "homepage": "https://github.com/ghadasawallha04-collab/AsalTraining#readme",
+  "devDependencies": {
+    "cypress": "^15.12.0"
+  }
+}

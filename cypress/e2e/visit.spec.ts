@@ -1,12 +1,28 @@
-import { searchGenericFunctions } from '../pages/actions/searchGenericFunctions';
-describe('Booking Search Functionality',() => {
-  const search=new searchGenericFunctions();
-  it('Should perform the full search in correct way',()=>{
-    search.openWebsite();
-    search.alertHandle();
-    search.enterDestination("Paris");
-    search.selectDates('2026-04-10','2026-04-15');
-    search.openGuests();
+import { BaseActions } from "../Pages/BasePage/BaseActions";
+import { SearchActions } from "../Pages/SearchPage/SearchActions";
+describe('Booking Search Functionality',() =>{
+  const base=new BaseActions();
+  const search=new SearchActions(); 
+  //Preconditions:
+  beforeEach(()=>{
+    base.openWebsite();
+    base.alertHandle();
+  });
+ it('Should perform the full search in correct way',()=>{
+    search.ChooseRandomDestination();
+    search.selectDates();
+    search.setOccupancy();
     search.clickSearch();
+
+
+    // set guests
+    /*search.openGuests();
+    search.setOccupancy({
+      adults: 3,
+      children: [{ age: 5 }, { age: 8 }],
+      rooms: 2
+    });
+    */
+
   });
 });

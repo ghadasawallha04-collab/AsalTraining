@@ -13,16 +13,5 @@ describe('Booking Search Functionality',() =>{
     search.selectDates();
     search.setOccupancy();
     search.clickSearch();
-
-
-    // set guests
-    /*search.openGuests();
-    search.setOccupancy({
-      adults: 3,
-      children: [{ age: 5 }, { age: 8 }],
-      rooms: 2
-    });
-    */
-
   });
 });

@@ -1,4 +1,4 @@
-export enum SearchConstants{
+export enum OccupancyConstants{
   ADULTS_MIN=1,
   ADULTS_MAX=30,
   ROOMS_MIN=1,

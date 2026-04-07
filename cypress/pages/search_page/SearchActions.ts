@@ -1,25 +1,29 @@
 ///<reference types="cypress" />
 import { destinationSearchInput,suggestionOptions,occupancyDropdown,searchButton } from "./SearchElements";
-import { Occupancy } from "./searchModels";
-import { selectRandomDestination,getRandomDates,getRandomNumber } from "../../utils/randomizers"; 
+import { Occupancy } from "./SearchModels";
+import { getElement } from "../../utils/elementHelpers";
+import { getRandomItemFromArray,getRandomDates,getRandomNumber } from "../../utils/randomizers"; 
 import { HtmlTags } from "../../utils/htmlTags";
-import { OccupancyConstants } from "./SearchConstants";
+import { OccupancyConstants,Destinations } from "./SearchConstants";
 export class SearchActions{
-    //Select a random destination and choose the first matching suggestion from the dropdown
-    chooseRandomDestination(){
-        cy.log("Selecting random option from dropdown");
-        selectRandomDestination(destinationSearchInput,suggestionOptions);
-    }
-    //Select check-in and check-out dates based on start after number of days and end after number of days
-    selectCheckInAndCheckOutDates(){
-        const{checkIn,checkOut}=getRandomDates(5,10);
-        cy.get(`[data-date="${checkIn}"]`).first().should('be.visible').click();
-        cy.get(`[data-date="${checkOut}"]`).last().should('be.visible').click();
+    //Set a Destination (Static or Random values)
+    setDestination(destination?:string){
+        cy.log("Selecting destination");
+        const selectedDestination=destination??getRandomItemFromArray(Destinations);
+        cy.log(`Selected destination: ${selectedDestination}`);
+        getElement(destinationSearchInput).should('be.visible').click().clear().type(selectedDestination);
+        getElement(suggestionOptions).contains(selectedDestination).first().should('be.visible').click();
+}
+    //Set checkIn and checkOut dates (Static or Random values)
+    setCheckInAndCheckOutDates(checkIn?:string,checkOut?: string){
+        const dates=(checkIn&&checkOut)?{checkIn,checkOut}:getRandomDates();
+        cy.get(`[data-date="${dates.checkIn}"]`).first().should('be.visible').click();
+        cy.get(`[data-date="${dates.checkOut}"]`).last().should('be.visible').click();
     }
     //Open the occupancy (guests) dropdown to configure adults, children and rooms
     openGuestsDropdown(){
-        cy.log("Openning guests dropdown list");
-        cy.get(occupancyDropdown).should('be.visible').click();
+        cy.log("Opening guests dropdown list");
+        getElement(occupancyDropdown).should('be.visible').click();
     }
     // Generate random occupancy data within allowed limits
     getRandomOccupancy=():Occupancy=>{
@@ -31,19 +35,23 @@ export class SearchActions{
         for(let i=0;i<childrenCount;i++){
             children.push(getRandomNumber(OccupancyConstants.CHILD_AGE_MIN,OccupancyConstants.CHILD_AGE_MAX));
         }
-        return {adults,children,rooms};
+        return{adults,children,rooms};
     };
-    //Apply genrated Occupancy values
-    setOccupancy():void {
+    //Apply generated Occupancy (Static or Random Values)
+    setOccupancy(data?:Occupancy):void {
         this.openGuestsDropdown();
-        cy.log("Generating Random Values for Occupancy");
-        const occupancy=this.getRandomOccupancy();
+        cy.log("Reset Occupancy to initial values");
+        this.resetAllToMinimum().then(()=>{
+        cy.log("Setting Occupancy Values");
+        const occupancy=data??this.getRandomOccupancy();
         cy.log(`Adults:${occupancy.adults}`);
         this.setAdults(occupancy.adults);
         cy.log(`Children:${occupancy.children.length}`);
         this.setChildren(occupancy.children);
         cy.log(`Rooms:${occupancy.rooms}`);
         this.setRooms(occupancy.rooms);
+            });
+
     }
     //Click the "+" button for a specific field (Adults/Children /Rooms)
     private clickIncreaseButtonByLabel(fieldName:string){
@@ -56,6 +64,50 @@ export class SearchActions{
         .and('not.be.disabled')
         .click();
     }
+    //Click the "-" button for a specific field (Adults/Children /Rooms)
+    private clickDecreaseButtonByLabel(fieldName:string){
+        cy.contains(HtmlTags.LABEL,fieldName)
+        .parent()
+        .parent()
+        .find(HtmlTags.BUTTON)
+        .first()
+        .should('be.visible')
+        .and('not.be.disabled')
+        .click();    
+    }
+    //Reset occupancy fields (Adults,Children or Rooms) to the minimum values depending on fieldName
+    resetFieldToMinimum(fieldName:string,minValue:number) {
+        return cy.contains(fieldName)
+        .parent()
+        .parent()
+        .find('span')
+        .invoke('text')
+        .then((text)=>{
+            const currentValue=Number(text);
+            const steps=currentValue-minValue;
+            if(steps<=0){
+                return 0;
+            }
+            cy.log(`Reset ${fieldName} from ${currentValue} to ${minValue}`);
+            for(let i=0;i<steps;i++){
+                this.clickDecreaseButtonByLabel(fieldName);
+            }
+        });
+    }
+    //Resetting all occupancy fields (Adults,Children and Rooms) to the minimum in one function
+    resetAllToMinimum(){
+        cy.log("Resetting adults value")
+        return this.resetFieldToMinimum("Adults",OccupancyConstants.ADULTS_MIN)
+        .then(()=>{
+            this.openGuestsDropdown();
+            cy.log("Resetting Children value")
+            return this.resetFieldToMinimum("Children",OccupancyConstants.CHILDREN_MIN);
+        })
+        .then(()=>{
+            cy.log("Resetting Rooms value")
+            return this.resetFieldToMinimum("Rooms",OccupancyConstants.ROOMS_MIN);
+        });
+}
     //Increase number of adults to the desired count
     setAdults(count:number){
         for(let i=1;i<count;i++){
@@ -82,6 +134,6 @@ export class SearchActions{
     //Click on search button function:
     clickSearch(){
         cy.log("Clicking on search button");
-        cy.get(searchButton).should('be.visible').click();
+        getElement(searchButton).should('be.visible').click();
     }
 }

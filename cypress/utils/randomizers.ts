@@ -1,22 +1,24 @@
 import moment from "moment";
-//Selecting random option from dropdown suggestions
-export const selectRandomDestination=(inputLocator:string, optionsLocator:string)=>{
-  const destinations=["Paris","London","Rome","Dubai","Istanbul"];
-  const randomIndex=Math.floor(Math.random()*destinations.length);
-  const randomItem=destinations[randomIndex];
-  cy.log(`Selected destination:${randomItem}`);
-  cy.get(inputLocator).should('be.visible').click().clear().type(randomItem);
-  cy.contains(optionsLocator,randomItem).first().should('be.visible').click();
+//Get Random item from a given array
+export const getRandomItemFromArray=<T>(items:T[]):T=>{
+  const randomIndex=Math.floor(Math.random()*items.length);
+  return items[randomIndex];
 };
-//Get Random dates depending on today date:
-export const getRandomDates=(startAfterDays:number,daysToEnd:number)=>{
-  const checkIn=moment().add(startAfterDays,'days').format('YYYY-MM-DD');
-  const checkOut=moment().add(daysToEnd,'days').format('YYYY-MM-DD');
-  return {checkIn,checkOut};
+//Get Random dates depending on today date
+export const getRandomDates=()=>{
+  const startAfterDays=Math.floor(Math.random()*30)+1;
+  const durationDays=Math.floor(Math.random()*30)+1;
+  const checkIn=moment().add(startAfterDays,"days");
+  const checkOut=checkIn.clone().add(durationDays,"days");
+  return {
+    checkIn:checkIn.format('YYYY-MM-DD'),
+    checkOut:checkOut.format('YYYY-MM-DD')
+};
 };
 //Random Number function generator:
 export const getRandomNumber=(min:number,max:number):number=>{
   return Math.floor(Math.random()*(max-min+1))+min;
 };
+
 
 

@@ -8,3 +8,10 @@ export enum OccupancyConstants{
   CHILD_AGE_MIN=0,
   CHILD_AGE_MAX=17
 }
+export const Destinations=[
+  "Paris",
+  "London",
+  "Rome",
+  "Dubai",
+  "Istanbul"
+];

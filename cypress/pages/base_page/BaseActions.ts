@@ -1,15 +1,19 @@
 ///<reference types="cypress" />
-import { closeSignInPopupBtn } from "./BaseElements";
+import { CLOSE_SIGN_IN_POPUP_BTN } from "./BaseElements";
 import { getElement } from "../../utils/elementHelpers";
 export class BaseActions{
-    //Open booking website function:
-    openBookingWebsite(){
+    /**
+     * Opens the Booking.com website.
+     */    openBookingWebsite(){
         cy.log("Opening booking website");
         cy.visit('https://www.booking.com');
     }
-    //Close sign in alert:
+    /**
+     * Closes the sign-in popup if it appears.
+     * Ensures the popup is visible before clicking.
+     */
     closeSignInPopup(){
         cy.log("Closing sign-in popup");
-        getElement(closeSignInPopupBtn).should('be.visible').click();
+        getElement(CLOSE_SIGN_IN_POPUP_BTN).should('be.visible').click();
     }
 }

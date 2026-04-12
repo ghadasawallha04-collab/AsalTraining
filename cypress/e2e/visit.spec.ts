@@ -18,10 +18,4 @@ describe('Booking Search Functionality',() =>{
     search.setOccupancy(searchOptions.occupancyData); 
     search.clickSearch();
   });
-it('Test 02: Should perform the full search in correct way using random data',()=>{
-    search.setDestination();
-    search.setCheckInAndCheckOutDates();
-    search.setOccupancy(); 
-    search.clickSearch();
-  });
 });

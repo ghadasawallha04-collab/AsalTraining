@@ -1,4 +1,4 @@
-export enum OccupancyConstants{
+export enum OccupancyConstant{ 
   ADULTS_MIN=1,
   ADULTS_MAX=30,
   ROOMS_MIN=1,
@@ -8,7 +8,7 @@ export enum OccupancyConstants{
   CHILD_AGE_MIN=0,
   CHILD_AGE_MAX=17
 }
-export const Destinations=[
+export const DESTINATION=[
   "Paris",
   "London",
   "Rome",

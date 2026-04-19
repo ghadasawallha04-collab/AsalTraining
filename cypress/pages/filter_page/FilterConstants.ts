@@ -17,7 +17,3 @@ export const FILTER_NAMES={
     PRICE_PER_NIGHT:"Your budget (per night)",
     BEDROOM_BATHROOM:"Bedrooms and bathrooms"
 };
-export const STEPPER_TYPES={
-    BEDROOMS:"Bedrooms",
-    BATHROOMS:"Bathrooms"
-} as const;

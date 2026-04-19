@@ -1,6 +1,6 @@
-import { FILTER_GROUP,STEPPER_CONTAINER,STEPPER_VALUE} from "./FilterElements";
+import { FILTER_GROUP,BEDROOM_STEPPER,BATHROOM_STEPPER,STEPPER_VALUE} from "./FilterElements";
 import { HtmlTags } from "../../utils/htmlTags";
-import { STEPPER_TYPES,FILTER_NAMES } from "./FilterConstants"; 
+import { FILTER_NAMES } from "./FilterConstants"; 
 export class FilterActions{
     /**
      * Selects filter options based on filter name and given values.
@@ -31,54 +31,78 @@ export class FilterActions{
             }
         });
 }
-    /**
- * Sets number of Bedrooms or Bathrooms using stepper filter
+/**
+ * Sets number of Bedrooms or Bathrooms using steppers
  * 
  * @param type - 'Bedrooms' | 'Bathrooms'
  * @param count - number of times to increment
  */
-setRooms(type:'Bedrooms'|'Bathrooms',count: number) {
+setRooms(type:"Bedrooms"|"Bathrooms",count:number){
     cy.log(`Setting ${type} to ${count}`);
-    cy.contains(FILTER_GROUP.selector!,'Bedrooms and bathrooms').scrollIntoView().within(()=>{
-        cy.contains(HtmlTags.DIV,type)
-        .parents(STEPPER_CONTAINER.selector!).within(()=>{
-            for (let i=0;i<count;i++) {
-                cy.get(HtmlTags.BUTTON).last().should('not.be.disabled').click();
-                cy.get(STEPPER_VALUE.selector!).should('contain',i+ 1);
-            }
-        });
-     });
+    const stepper=type==="Bedrooms"?BEDROOM_STEPPER.selector!:BATHROOM_STEPPER.selector!;
+    cy.get(stepper).should("be.visible").within(()=>{
+        const adjustStepper=()=>{
+            cy.get(STEPPER_VALUE.selector!).invoke("text").then((text)=>{
+                const current=parseInt(text.trim());
+                if(current<count){
+                    cy.log(`Increase ${type}`);
+                    cy.get(HtmlTags.BUTTON).eq(1).click().then(()=>adjustStepper());
+                } 
+                else if(current>count){
+                    cy.log(`Decrease ${type}`);
+                    cy.get(HtmlTags.BUTTON).eq(0).click().then(()=>adjustStepper());
+                } 
+                else{
+                    cy.log(`${type} set to ${count}`);
+                }
+            });
+        };
+        adjustStepper();
+    });
 }
-/**
- * Applies multiple filters dynamically
- */
+  /**
+   * Applies multiple filters dynamically
+   * Ensures Bedrooms and Bathrooms are correct at the end
+   */
 applyAllFilters(filters: Record<string, any>) {
     cy.log("Applying all filters");
     for(const filterName in filters){
         const value=filters[filterName];
-        if(filterName===FILTER_NAMES.BEDROOM_BATHROOM) {
-            const {bedrooms,bathrooms}=value;
-            if(bedrooms){
-                this.setRooms('Bedrooms',bedrooms);
-            }
+        if(filterName===FILTER_NAMES.BEDROOM_BATHROOM){
+            const{bedrooms,bathrooms}=value;
             if(bathrooms){
-                this.setRooms('Bathrooms',bathrooms);
+                 cy.log(`Setting Bathrooms`);
+                this.setRooms("Bathrooms",bathrooms);
             }
+            if(bedrooms){
+                 cy.log(`Setting Bedrooms`);
+                this.setRooms("Bedrooms",bedrooms);
+            }
+            cy.then(()=>{
+                if(bedrooms){
+                    cy.get(BEDROOM_STEPPER.selector!).find(STEPPER_VALUE.selector!).invoke("text").then((text)=>{
+                        const current=parseInt(text.trim());
+                        if(current!==bedrooms){
+                             cy.log(`Fix Bedrooms`);
+                            this.setRooms("Bedrooms", bedrooms);
+                        }
+                    });
+                }
+                if(bathrooms){
+                    cy.get(BATHROOM_STEPPER.selector!).find(STEPPER_VALUE.selector!).invoke("text").then((text)=>{
+                        const current=parseInt(text.trim());
+                        if (current!==bathrooms) {
+                            cy.log(`Fix Bathrooms`);
+                            this.setRooms("Bathrooms", bathrooms);
+                        }
+                    });
+                }
+            });
         } 
         else{
             this.selectFilter(filterName,value);
         }
     }
-
-}
-/**
- * Applies filters from array format
- */
-applyFiltersArray(filters:{name:string;value:any }[]){
-    cy.log("Applying filters from array");
-    filters.forEach(filter=>{
-        this.applyAllFilters({[filter.name]:filter.value});
-    });
 }
 }
 

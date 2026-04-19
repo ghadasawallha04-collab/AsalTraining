@@ -9,8 +9,13 @@ export const FILTER_LABEL=(text:string):Readonly<PageElement>=>({
     testId:null,
     displayText:text
 });
-export const STEPPER_CONTAINER:Readonly<PageElement>={
-    selector:'[data-testid="filters-group-item-stepper"]',
+export const BEDROOM_STEPPER:Readonly<PageElement>={
+    selector:'[data-filters-item="unit_config_grouped:entire_place_bedroom_count"]',
+    testId:null,
+    displayText:null
+};
+export const BATHROOM_STEPPER:Readonly<PageElement>={
+    selector:'[data-filters-item="unit_config_grouped:min_bathrooms"]',
     testId:null,
     displayText:null
 };
@@ -19,4 +24,3 @@ export const STEPPER_VALUE:Readonly<PageElement>={
     testId:null,
     displayText:null
 };
-

@@ -10,6 +10,9 @@ describe('Booking Search Functionality',() =>{
   });
   //Test
  it('Should Perform Search',()=>{
-  search.performSearch();
-  });
+  const searchOptions={destination:"Paris",checkInDate:"2026-05-10",checkOutDate:"2026-05-15",
+    occupancyData:{adults:2,children:[5,8],rooms:1}
+  };
+  search.performSearch(searchOptions);
+});
 });

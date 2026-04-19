@@ -265,12 +265,12 @@ export class SearchActions{
  *
  * @returns {void} Executes the search flow and navigates to results page
  */
-    performSearch(){
-    const occupancyData={adults:2,children:[5,8],rooms:1}
-    const searchOptions={destination:"Paris",checkInDate:"2026-05-10",checkOutDate:"2026-05-15",occupancyData};
-    this.setDestination(searchOptions.destination);
-    this.setCheckInAndCheckOutDates(searchOptions.checkInDate,searchOptions.checkOutDate);
-    this.setOccupancy(searchOptions.occupancyData); 
-    this.clickSearch(); 
+performSearch(searchOptions?:{destination?:string;checkInDate?:string;checkOutDate?:string;
+    occupancyData?:{adults:number;children:number[];rooms:number;};}){
+    cy.log("Performing search");
+    this.setDestination(searchOptions?.destination);
+    this.setCheckInAndCheckOutDates(searchOptions?.checkInDate,searchOptions?.checkOutDate);
+    this.setOccupancy(searchOptions?.occupancyData);
+    this.clickSearch();
 }
 }

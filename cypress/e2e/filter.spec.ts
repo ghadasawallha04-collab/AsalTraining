@@ -10,11 +10,12 @@ describe("Booking Filters functionality",()=>{
     beforeEach(()=>{
         base.openBookingWebsite();
         base.closeSignInPopup();
-        search.performSearch(); //Adding array to pass
+        const searchOptions={destination:"Paris",checkInDate:"2026-05-10",checkOutDate:"2026-05-15",
+            occupancyData:{adults:2,children:[5,8],rooms:1}
+        };
+        search.performSearch(searchOptions); 
     });
     it("Should perform the filtering functionality",()=>{
-        /*filter.setRooms("Bathrooms",3)
-        filter.setRooms("Bedrooms",1)*/
         const filters={
             [FILTER_NAMES.PROPERTY_TYPE]: ['Apartments'],
             [FILTER_NAMES.PROPERTY_RATING]: ['5 stars'],

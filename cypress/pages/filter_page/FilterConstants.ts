@@ -13,5 +13,11 @@ export const FILTER_NAMES={
     TRAVEL_GROUP:"Travel group",
     ONLINE_PAYMENT:"Online Payment",
     PROPERTY_ACCESSIBILITY:"Property Accessibility",
-    ROOM_ACCESSIBILITY:"Room Accessibility"
+    ROOM_ACCESSIBILITY:"Room Accessibility",
+    PRICE_PER_NIGHT:"Your budget (per night)",
+    BEDROOM_BATHROOM:"Bedrooms and bathrooms"
 };
+export const STEPPER_TYPES={
+    BEDROOMS:"Bedrooms",
+    BATHROOMS:"Bathrooms"
+} as const;

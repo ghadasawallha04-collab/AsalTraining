@@ -13,9 +13,11 @@ describe("Booking Filters functionality",()=>{
         search.performSearch();
     });
     it("Should perform the filtering functionality",()=>{
-      filter.applyFilters({[FILTER_NAMES.PROPERTY_TYPE]:["Hotels","Apartments"],[FILTER_NAMES.REVIEW_SCORE]:["Wonderful: 9+"],
-            [FILTER_NAMES.PROPERTY_RATING]:["5 stars","4 stars"]
-        });
-
-    });
+        const filtersArray=[
+            {name:FILTER_NAMES.PROPERTY_TYPE,value:['Apartments'] },
+            {name:FILTER_NAMES.PROPERTY_RATING,value: ['5 stars'] },
+            {name: FILTER_NAMES.BEDROOM_BATHROOM,value:{bedrooms:2,bathrooms:1}}
+        ];
+        filter.applyFiltersArray(filtersArray);
+});
 });

@@ -3,5 +3,6 @@ export enum HtmlTags {
   BUTTON="button",
   SELECT="select",
   LABEL="label",
-  DIV="div"
+  DIV="div",
+  H3="h3"
 }

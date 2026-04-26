@@ -1,4 +1,5 @@
 import { PageElement } from "../../types/page-elements";
+import { HtmlTags } from "../../utils/htmlTags";
 export const DESTINATION_SEARCH_INPUT:Readonly<PageElement>={ //Readonly 
     selector:'input[name="ss"]',
     testId:null,
@@ -19,4 +20,18 @@ export const SEARCH_BUTTON:Readonly<PageElement>={
     testId:null,
     displayText:null
 };
-
+export const PROPERTY_CARD:Readonly<PageElement>={
+  selector:'[data-testid="property-card"]',
+  testId:null,
+  displayText:null
+};
+export const PROPERTY_CARD_TITLE:Readonly<PageElement>={
+  selector:HtmlTags.H3,
+  testId: null,
+  displayText: null
+};
+export const PRICE_NIGHTS_INFO:Readonly<PageElement>={
+  selector:'[data-testid="price-for-x-nights"]',
+  testId:null,
+  displayText:null
+};

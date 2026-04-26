@@ -78,31 +78,12 @@ applyAllFilters(filters: Record<string, any>) {
                  cy.log(`Setting Bedrooms`);
                 this.setRooms("Bedrooms",bedrooms);
             }
-            cy.then(()=>{
-                if(bedrooms){
-                    cy.get(BEDROOM_STEPPER.selector!).find(STEPPER_VALUE.selector!).invoke("text").then((text)=>{
-                        const current=parseInt(text.trim());
-                        if(current!==bedrooms){
-                             cy.log(`Fix Bedrooms`);
-                            this.setRooms("Bedrooms", bedrooms);
-                        }
-                    });
-                }
-                if(bathrooms){
-                    cy.get(BATHROOM_STEPPER.selector!).find(STEPPER_VALUE.selector!).invoke("text").then((text)=>{
-                        const current=parseInt(text.trim());
-                        if (current!==bathrooms) {
-                            cy.log(`Fix Bathrooms`);
-                            this.setRooms("Bathrooms", bathrooms);
-                        }
-                    });
-                }
-            });
         } 
         else{
             this.selectFilter(filterName,value);
         }
     }
 }
+
 }
 

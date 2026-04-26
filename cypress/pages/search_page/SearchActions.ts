@@ -1,5 +1,5 @@
 ///<reference types="cypress" />
-import { DESTINATION_SEARCH_INPUT,SUGGESTION_OPTIONS, OCCUPANCY_DROPDOWN,SEARCH_BUTTON } from "./SearchElements";
+import { DESTINATION_SEARCH_INPUT,SUGGESTION_OPTIONS, OCCUPANCY_DROPDOWN,SEARCH_BUTTON,PROPERTY_CARD,PROPERTY_CARD_TITLE,PRICE_NIGHTS_INFO } from "./SearchElements";
 import { Occupancy } from "./SearchModels";
 import { getElement } from "../../utils/elementHelpers";
 import { getRandomItemFromArray,getRandomDates,getRandomNumber } from "../../utils/randomizers"; 
@@ -273,4 +273,42 @@ performSearch(searchOptions?:{destination?:string;checkInDate?:string;checkOutDa
     this.setOccupancy(searchOptions?.occupancyData);
     this.clickSearch();
 }
+/**
+ * Validates the first search result card.
+ * It verifies:
+ * - Hotel name matches the searched destination
+ * - Number of nights is correct
+ * - Number of adults is correct
+ * - Number of children is correct
+ *
+ * @param expectedDestinationName - The destination or hotel name entered in search
+ * @param expectedCheckIn - Check-in date (YYYY-MM-DD)
+ * @param expectedCheckOut - Check-out date (YYYY-MM-DD)
+ * @param expectedAdults - Number of adults
+ * @param expectedChildren - Number of children
+ */
+searchInfoAssertFirstCard(expectedDestinationName:string,expectedCheckIn:string,expectedCheckOut:string,
+    expectedAdults:number,expectedChildren:number) {
+        cy.log(`Asserting first card name is: ${expectedDestinationName}`);
+        cy.get(PROPERTY_CARD.selector!).filter(':visible').first().within(()=>{
+            cy.get(PROPERTY_CARD_TITLE.selector!).should('be.visible').invoke('text').then((actualDestinationName)=>{
+                cy.log(`Actual:${actualDestinationName}`);
+                const normalize=(text:string)=>
+                    text.replace(/\s+/g,' ').trim().toLowerCase();
+                expect(normalize(actualDestinationName)).to.contain(normalize(expectedDestinationName));
+            });
+            cy.get(PRICE_NIGHTS_INFO.selector!).should('be.visible').invoke('text').then((text)=>{ 
+                const lower=text.toLowerCase();
+                 const nights=(new Date(expectedCheckOut).getTime()-new Date(expectedCheckIn).getTime())/(1000*60*60*24);
+                cy.log(`Expected Nights: ${nights}`);
+                cy.log(`Card data: ${lower}`);
+                cy.log(`Expected Adults: ${expectedAdults}`);
+                cy.log(`Expected Children: ${expectedChildren}`);
+                 expect(lower).to.contain(`${nights}`);
+                 expect(lower).to.contain(`${expectedAdults} adults`);
+                 expect(lower).to.contain(`${expectedChildren} children`);
+         });
+    });
+}
+
 }

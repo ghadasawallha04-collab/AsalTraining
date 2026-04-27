@@ -15,7 +15,6 @@ describe('Booking Search Functionality',() =>{
     occupancyData:{adults:2,children:[5,8],rooms:1}
   };
   search.performSearch(searchOptions);
-  search.searchInfoAssertFirstCard(searchOptions.destination,searchOptions.checkInDate,searchOptions.checkOutDate,
-    searchOptions.occupancyData.adults,searchOptions.occupancyData.children.length);
+  search.verifyCardSearchDetails(searchOptions);
 });
 });

@@ -1,7 +1,7 @@
 export const FILTER_NAMES={
     PROPERTY_TYPE:"Property Type",
     MEALS:"Meals",
-    REVIEW_SCORE:"Review score",
+    REVIEW_SCORE:"Review score", //assert done
     RESERVATION_POLICY:"Reservation policy",
     FACILITIES:"Facilities",
     ROOM_FACILITIES:"Room facilities",
@@ -15,5 +15,5 @@ export const FILTER_NAMES={
     PROPERTY_ACCESSIBILITY:"Property Accessibility",
     ROOM_ACCESSIBILITY:"Room Accessibility",
     PRICE_PER_NIGHT:"Your budget (per night)",
-    BEDROOM_BATHROOM:"Bedrooms and bathrooms"
+    BEDROOM_BATHROOM:"Bedrooms and bathrooms" //assert done
 };

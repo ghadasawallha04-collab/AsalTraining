@@ -24,3 +24,13 @@ export const STEPPER_VALUE:Readonly<PageElement>={
     testId:null,
     displayText:null
 };
+export const PROPERTY_CARD_UNIT_CONFIGURATION:Readonly<PageElement>={
+    selector:'[data-testid="property-card-unit-configuration"]',
+    testId:null,
+    displayText:null
+};
+export const REVIEW_SCORE: Readonly<PageElement>={
+    selector:'[data-testid="review-score"] [aria-hidden="true"]',
+    testId:null,
+    displayText:null
+};

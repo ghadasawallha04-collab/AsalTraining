@@ -15,5 +15,5 @@ export const FILTER_NAMES={
     PROPERTY_ACCESSIBILITY:"Property Accessibility",
     ROOM_ACCESSIBILITY:"Room Accessibility",
     PRICE_PER_NIGHT:"Your budget (per night)",
-    BEDROOM_BATHROOM:"Bedrooms and bathrooms" //assert done
+    BEDROOM_BATHROOM:"Bedrooms and bathrooms" //assert done 
 };

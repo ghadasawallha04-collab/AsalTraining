@@ -16,6 +16,7 @@ describe("Booking Filters functionality",()=>{
         search.performSearch(searchOptions); 
     });
     it("Should perform the filtering functionality",()=>{
+        cy.intercept('GET','**searchresults*').as('searchResults');
         const filters={
             //[FILTER_NAMES.PROPERTY_TYPE]: ['Apartments'],
             //[FILTER_NAMES.PROPERTY_RATING]: ['5 stars'],
@@ -23,7 +24,7 @@ describe("Booking Filters functionality",()=>{
             [FILTER_NAMES.BEDROOM_BATHROOM]: {bedrooms: 1,bathrooms: 3}
         };
         filter.applyAllFilters(filters);
-        cy.wait(6000);
+        cy.wait('@searchResults');
         filter.validateCardFilters(filters);
 });
 });

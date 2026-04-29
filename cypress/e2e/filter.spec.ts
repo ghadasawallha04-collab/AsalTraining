@@ -2,9 +2,11 @@ import { FilterActions } from "../pages/filter_page/FilterActions";
 import { BaseActions } from "../pages/base_page/BaseActions";
 import { SearchActions } from "../pages/search_page/SearchActions";
 import { FILTER_NAMES } from "../pages/filter_page/FilterConstants";
+import { FilterValidations } from "../pages/filter_page/FilterValidation";
 const base=new BaseActions();
 const search=new SearchActions();
 const filter=new FilterActions();
+const verify=new FilterValidations();
 describe("Booking Filters functionality",()=>{
     //Preconditions:
     beforeEach(()=>{
@@ -19,12 +21,12 @@ describe("Booking Filters functionality",()=>{
         cy.intercept('GET','**searchresults*').as('searchResults');
         const filters={
             //[FILTER_NAMES.PROPERTY_TYPE]: ['Apartments'],
-            //[FILTER_NAMES.PROPERTY_RATING]: ['5 stars'],
+            //[FILTER_NAMES.PROPERTY_RATING]: ['5 stars'],س
             [FILTER_NAMES.REVIEW_SCORE] :['Wonderful: 9+'],
             [FILTER_NAMES.BEDROOM_BATHROOM]: {bedrooms: 1,bathrooms: 3}
         };
         filter.applyAllFilters(filters);
         cy.wait('@searchResults');
-        filter.validateCardFilters(filters);
+        verify.validateCardFilters(filters);
 });
 });

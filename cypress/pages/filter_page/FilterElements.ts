@@ -29,8 +29,13 @@ export const PROPERTY_CARD_UNIT_CONFIGURATION:Readonly<PageElement>={
     testId:null,
     displayText:null
 };
-export const REVIEW_SCORE: Readonly<PageElement>={
+export const REVIEW_SCORE:Readonly<PageElement>={
     selector:'[data-testid="review-score"] [aria-hidden="true"]',
+    testId:null,
+    displayText:null
+};
+export const RATING_STARS:Readonly<PageElement>={
+    selector:'[data-testid="rating-stars"]',
     testId:null,
     displayText:null
 };

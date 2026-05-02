@@ -20,10 +20,9 @@ describe("Booking Filters functionality",()=>{
     it("Should perform the filtering functionality",()=>{
         cy.intercept('GET','**searchresults*').as('searchResults');
         const filters={
-            //[FILTER_NAMES.PROPERTY_TYPE]: ['Apartments'],
-            //[FILTER_NAMES.PROPERTY_RATING]: ['5 stars'],س
+            [FILTER_NAMES.PROPERTY_RATING]: ['5 stars'],
             [FILTER_NAMES.REVIEW_SCORE] :['Wonderful: 9+'],
-            [FILTER_NAMES.BEDROOM_BATHROOM]: {bedrooms: 1,bathrooms: 3}
+          //  [FILTER_NAMES.BEDROOM_BATHROOM]: {bedrooms: 1,bathrooms: 3}
         };
         filter.applyAllFilters(filters);
         cy.wait('@searchResults');

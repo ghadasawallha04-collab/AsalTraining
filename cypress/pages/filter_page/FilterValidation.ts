@@ -1,5 +1,5 @@
 import { PROPERTY_CARD } from "../search_page/SearchElements";
-import { PROPERTY_CARD_UNIT_CONFIGURATION,REVIEW_SCORE } from "./FilterElements";
+import { PROPERTY_CARD_UNIT_CONFIGURATION,REVIEW_SCORE,RATING_STARS } from "./FilterElements";
 import { FILTER_NAMES } from "./FilterConstants"; 
 export class FilterValidations{
 /**
@@ -32,14 +32,10 @@ validateCardFilters(filters:Record<string,any>,cardIndex: number=0) {
                 this.assertReviewScore(value,validationErrors,filterName);
                 break;
                 /////////////////////////////////////////////////////////////////////
-                case(FILTER_NAMES.MEALS):
+                case(FILTER_NAMES.PROPERTY_RATING):
+                this.assertStarRating(value,validationErrors,filterName);
                 break;
-                case(FILTER_NAMES.RESERVATION_POLICY):
-                break;
-                case(FILTER_NAMES.FACILITIES):
-                break;
-                case(FILTER_NAMES.ROOM_FACILITIES):
-                break;
+                ///////////////////////////////////////////////////////////////////// 
                 default:cy.log(`No assertion defined for ${filterName}`);
             }
         }
@@ -114,4 +110,40 @@ assertReviewScore(value:string,validationErrors:string[],filterName:string){
             }
         });
 }
+/**
+ * Validates the star rating of a property card.
+ * It compares the actual star rating (extracted from the aria-label)
+ * with the expected rating provided by the filter.
+ *
+ * Steps:
+ * 1. Locate the rating stars element inside the property card
+ * 2. Navigate to its parent element to access the aria-label
+ * 3. Extract the numeric star value from the label (e.g., "4 out of 5")
+ * 4. Convert the expected filter value to a number (e.g., "5 stars" → 5)
+ * 5. Compare actual stars with expected stars
+ * 6. Push an error into validationErrors if validation fails
+ *
+ * @param value - Expected star rating from the filter (e.g., "5 stars")
+ * @param validationErrors - Shared array to collect validation error messages
+ * @param filterName - Name of the filter used for logging and error messages
+ */
+assertStarRating(value:string,validationErrors:string[],filterName:string){
+    cy.get( RATING_STARS.selector!).should('be.visible').parent().invoke('attr','aria-label').then(label=>{
+            cy.log(`Actual label: ${label}`);
+            let actualStars=0;
+            if(label){
+                actualStars=Number(label.split(' ')[0]);
+            }
+            const expectedStars=Number(value.toString().replace(/\D/g,''));
+            cy.log(`Expected stars: ${expectedStars}`);
+            cy.log(`Actual stars: ${actualStars}`);
+            if(actualStars<expectedStars){
+                validationErrors.push(`${filterName}: Stars are ${actualStars} and expected is ${expectedStars}`);
+            }
+            else{
+                cy.log(`${filterName}:Star rating is valid: ${actualStars}`);
+            }
+        });
 }
+}
+

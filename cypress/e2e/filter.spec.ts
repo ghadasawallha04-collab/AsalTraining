@@ -18,14 +18,12 @@ describe("Booking Filters functionality",()=>{
         search.performSearch(searchOptions); 
     });
     it("Should perform the filtering functionality",()=>{
-        cy.intercept('GET','**searchresults*').as('searchResults');
         const filters={
             [FILTER_NAMES.PROPERTY_RATING]: ['5 stars'],
             [FILTER_NAMES.REVIEW_SCORE] :['Wonderful: 9+'],
           //  [FILTER_NAMES.BEDROOM_BATHROOM]: {bedrooms: 1,bathrooms: 3}
         };
         filter.applyAllFilters(filters);
-        cy.wait('@searchResults');
         verify.validateCardFilters(filters);
 });
 });

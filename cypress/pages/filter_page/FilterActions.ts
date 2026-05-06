@@ -1,6 +1,7 @@
 import { FILTER_GROUP,BEDROOM_STEPPER,BATHROOM_STEPPER,STEPPER_VALUE} from "./FilterElements";
 import { HtmlTags } from "../../utils/htmlTags";
 import { FILTER_NAMES } from "./FilterConstants"; 
+import { logger } from "../../utils/logger";
 export class FilterActions{
     /**
      * Selects filter options based on filter name and given values.
@@ -15,7 +16,7 @@ export class FilterActions{
      * @param options - Single option or array of options to select
      */
     selectFilter(filterName:string,options:string|string[]) {
-        cy.log(`Selecting filter:${filterName}`);
+        logger.filter(`Selecting filter: ${filterName}`);
         let values;
         if(Array.isArray(options)) {
             values=options;
@@ -23,11 +24,11 @@ export class FilterActions{
         else{
             values=[options];
         }
-        cy.log("Choosing Options");
+        logger.info("Choosing filter options");
         cy.contains(FILTER_GROUP.selector!,filterName).parent().within(()=>{
             for (let i=0;i<values.length;i++) {
-                cy.log(`Clicking option:${values[i]}`);
-                cy.contains(HtmlTags.LABEL,values[i]).click();
+                logger.info(`Clicking option: ${values[i]}`);
+                cy.clickByText(HtmlTags.LABEL,values[i]);
             }
         });
 }
@@ -38,22 +39,23 @@ export class FilterActions{
  * @param count - number of times to increment
  */
 setRooms(type:"Bedrooms"|"Bathrooms",count:number){
-    cy.log(`Setting ${type} to ${count}`);
+    logger.filter(`Setting ${type} to ${count}`);
     const stepper=type==="Bedrooms"?BEDROOM_STEPPER.selector!:BATHROOM_STEPPER.selector!;
     cy.get(stepper).should("be.visible").within(()=>{
         const adjustStepper=()=>{
             cy.get(STEPPER_VALUE.selector!).invoke("text").then((text)=>{
                 const current=parseInt(text.trim());
+                logger.validation(`${type} current value: ${current}`);
                 if(current<count){
-                    cy.log(`Increase ${type}`);
+                    logger.info(`Increasing ${type}`);
                     cy.get(HtmlTags.BUTTON).eq(1).click().then(()=>adjustStepper());
                 } 
                 else if(current>count){
-                    cy.log(`Decrease ${type}`);
+                    logger.info(`Decreasing ${type}`);
                     cy.get(HtmlTags.BUTTON).eq(0).click().then(()=>adjustStepper());
                 } 
                 else{
-                    cy.log(`${type} set to ${count}`);
+                    logger.success(`${type} set successfully to ${count}`);
                 }
             });
         };
@@ -65,17 +67,18 @@ setRooms(type:"Bedrooms"|"Bathrooms",count:number){
    * Ensures Bedrooms and Bathrooms are correct at the end
    */
 applyAllFilters(filters: Record<string, any>) {
-    cy.log("Applying all filters");
+    logger.step("Applying all filters");
+    cy.intercept('GET','**searchresults*').as('searchResults');
     for(const filterName in filters){
         const value=filters[filterName];
         if(filterName===FILTER_NAMES.BEDROOM_BATHROOM){
             const{bedrooms,bathrooms}=value;
             if(bathrooms){
-                 cy.log(`Setting Bathrooms`);
+                logger.filter("Setting Bathrooms");
                 this.setRooms("Bathrooms",bathrooms);
             }
             if(bedrooms){
-                 cy.log(`Setting Bedrooms`);
+                logger.filter("Setting Bedrooms");
                 this.setRooms("Bedrooms",bedrooms);
             }
         } 
@@ -83,6 +86,14 @@ applyAllFilters(filters: Record<string, any>) {
             this.selectFilter(filterName,value);
         }
     }
+    cy.wait('@searchResults');
+    cy.get('@searchResults.all').then((requests:any)=>{
+        logger.validation(`Total search requests: ${requests.length}`);
+        requests.forEach((request:any,index:number)=>{
+            logger.info(`Waiting for request ${index+1}`);
+        });
+    });
+    logger.success("All filters applied successfully");
 }
 }
 

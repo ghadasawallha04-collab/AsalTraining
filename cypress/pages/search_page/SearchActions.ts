@@ -5,6 +5,7 @@ import { getElement } from "../../utils/elementHelpers";
 import { getRandomItemFromArray,getRandomDates,getRandomNumber } from "../../utils/randomizers"; 
 import { HtmlTags } from "../../utils/htmlTags";
 import { OccupancyConstant,DESTINATION } from "./SearchConstants";
+import { logger } from "../../utils/logger";
 export class SearchActions{
 /**
  * Sets the destination in the search input.
@@ -19,9 +20,9 @@ export class SearchActions{
  * @returns {Cypress.Chainable<string>} The selected destination value
  */
     setDestination(destination?:string){
-        cy.log("Selecting destination");
+        logger.search("Selecting destination");
         const selectedDestination=destination??getRandomItemFromArray(DESTINATION);
-        cy.log(`Selected destination: ${selectedDestination}`);
+        logger.success(`Selected destination: ${selectedDestination}`);
         getElement(DESTINATION_SEARCH_INPUT).should('be.visible').click().clear().type(selectedDestination);
         getElement(SUGGESTION_OPTIONS).contains(selectedDestination).first().should('be.visible').click();
         return cy.wrap(selectedDestination);
@@ -42,6 +43,7 @@ export class SearchActions{
         const dates=(checkIn&&checkOut)?{checkIn,checkOut}:getRandomDates();
         cy.get(`[data-date="${dates.checkIn}"]`).first().should('be.visible').click();
         cy.get(`[data-date="${dates.checkOut}"]`).last().should('be.visible').click();
+        logger.success(`Selected dates | Check-in: ${dates.checkIn} | Check-out: ${dates.checkOut}`);
         return cy.wrap(dates);
     }
 /**
@@ -54,7 +56,7 @@ export class SearchActions{
  * @returns {void}
  */
     openGuestsDropdown(){
-        cy.log("Opening guests dropdown list");
+        logger.step("Opening guests dropdown list");
         getElement(OCCUPANCY_DROPDOWN).should('be.visible').click();
     }
 /**
@@ -76,6 +78,7 @@ export class SearchActions{
         for(let i=0;i<childrenCount;i++){
             children.push(getRandomNumber(OccupancyConstant.CHILD_AGE_MIN,OccupancyConstant.CHILD_AGE_MAX));
         }
+        logger.validation(`Generated Occupancy | Adults: ${adults} | Children: ${children.length} | Rooms: ${rooms}`);
         return{adults,children,rooms};
     };
 /**
@@ -94,15 +97,15 @@ export class SearchActions{
  */
     setOccupancy(data?:Occupancy) {
         this.openGuestsDropdown();
-        cy.log("Reset Occupancy to initial values");
+        logger.step("Resetting occupancy to initial values");
         return this.resetAllToMinimum().then(()=>{
-        cy.log("Setting Occupancy Values");
+        logger.step("Setting occupancy values");
         const occupancy=data??this.getRandomOccupancy();
-        cy.log(`Adults:${occupancy.adults}`);
+        logger.validation(`Adults count: ${occupancy.adults}`);
         this.setAdults(occupancy.adults);
-        cy.log(`Children:${occupancy.children.length}`);
+        logger.validation(`Children count: ${occupancy.children.length}`);
         this.setChildren(occupancy.children);
-        cy.log(`Rooms:${occupancy.rooms}`);
+        logger.validation(`Rooms count: ${occupancy.rooms}`);
         this.setRooms(occupancy.rooms);
         return cy.wrap(occupancy);
             });
@@ -165,7 +168,7 @@ export class SearchActions{
             if(steps<=0){
                 return 0;
             }
-            cy.log(`Reset ${fieldName} from ${currentValue} to ${minValue}`);
+            logger.info(`Reset ${fieldName} from ${currentValue} to ${minValue}`);
             for(let i=0;i<steps;i++){
                 this.clickDecreaseButtonByLabel(fieldName);
             }
@@ -182,15 +185,15 @@ export class SearchActions{
  * @returns {Cypress.Chainable<any>}
  */
     resetAllToMinimum(){
-        cy.log("Resetting adults value")
+        logger.step("Resetting adults value");
         return this.resetFieldToMinimum("Adults",OccupancyConstant.ADULTS_MIN)
         .then(()=>{
             this.openGuestsDropdown();
-            cy.log("Resetting Children value")
+            logger.step("Resetting children value");
             return this.resetFieldToMinimum("Children",OccupancyConstant.CHILDREN_MIN);
         })
         .then(()=>{
-            cy.log("Resetting Rooms value")
+            logger.step("Resetting rooms value");
             return this.resetFieldToMinimum("Rooms",OccupancyConstant.ROOMS_MIN);
         });
     }
@@ -242,8 +245,9 @@ export class SearchActions{
  * @returns {void}
  */
     clickSearch(){
-        cy.log("Clicking on search button");
+        logger.search("Clicking on search button");
         getElement(SEARCH_BUTTON).should('be.visible').click();
+        logger.success("Search submitted successfully");
     }
     /**
  * Performs a full search on the Booking website using predefined static data.
@@ -267,7 +271,7 @@ export class SearchActions{
  */
 performSearch(searchOptions?:{destination?:string;checkInDate?:string;checkOutDate?:string;
     occupancyData?:{adults:number;children:number[];rooms:number;};}){
-    cy.log("Performing search");
+    logger.search("Performing full search flow");
     this.setDestination(searchOptions?.destination);
     this.setCheckInAndCheckOutDates(searchOptions?.checkInDate,searchOptions?.checkOutDate);
     this.setOccupancy(searchOptions?.occupancyData);

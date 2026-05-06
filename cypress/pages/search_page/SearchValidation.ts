@@ -1,4 +1,5 @@
 import { PROPERTY_CARD,PROPERTY_CARD_TITLE,PRICE_NIGHTS_INFO } from "./SearchElements";
+import { logger } from "../../utils/logger";
 export class SearchValidations{
 /**
  * Validates that a specific property card matches the search details.
@@ -22,14 +23,15 @@ verifyCardSearchDetails(searchOptions:any,cardIndex: number=0){
         const{destination,checkInDate,checkOutDate,occupancyData}=searchOptions;
         const expectedAdults=occupancyData?.adults;
         const expectedChildren=occupancyData?.children?.length;
-        cy.log(`Validating card at index: ${cardIndex}`);
-        cy.log(`Asserting card name is: ${destination}`);
+        logger.assertion(`Validating card at index: ${cardIndex}`);
+        logger.validation(`Expected destination: ${destination}`);
         cy.get(PROPERTY_CARD.selector!).filter(':visible').eq(cardIndex).within(()=>{
             cy.get(PROPERTY_CARD_TITLE.selector!).should('be.visible').invoke('text').then((actualDestinationName)=>{
-                cy.log(`Actual:${actualDestinationName}`);
+                logger.validation(`Actual destination: ${actualDestinationName}`);
                 const normalize=(text:string)=>
                     text.replace(/\s+/g,' ').trim().toLowerCase();
                 expect(normalize(actualDestinationName)).to.contain(normalize(destination));
+                logger.success(`Destination validation passed | Actual: ${actualDestinationName} | Expected: ${destination}`);
             });
             cy.get(PRICE_NIGHTS_INFO.selector!).should('be.visible').invoke('text').then((text)=>{ 
                 this.assertNightsAndOccupancy(text,checkInDate,checkOutDate,expectedAdults,expectedChildren);
@@ -57,19 +59,22 @@ verifyCardSearchDetails(searchOptions:any,cardIndex: number=0){
 assertNightsAndOccupancy(text:string,checkInDate:string,checkOutDate:string,expectedAdults?:number,expectedChildren?:number) {
     const lower=text.toLowerCase();
     const nights=(new Date(checkOutDate).getTime()-new Date(checkInDate).getTime())/(1000*60*60*24);
-    cy.log(`Expected Nights:${nights}`);
-    cy.log(`Expected Adults:${expectedAdults}`);
-    cy.log(`Expected Children:${expectedChildren}`);
-    cy.log(`Card data:${lower}`);
+    logger.validation(`Expected nights: ${nights}`);
+    logger.validation(`Expected adults: ${expectedAdults}`);
+    logger.validation(`Expected children: ${expectedChildren}`);
+    logger.validation(`Actual card data: ${lower}`);
     expect(lower.includes(`${nights} night`) || lower.includes(`${nights} nights`)).to.be.true;
+    logger.success(`Nights validation passed | Expected: ${nights}`);
     if(expectedAdults!== undefined){
         expect(lower.includes(`${expectedAdults} adult`) || lower.includes(`${expectedAdults} adults`)).to.be.true;
+        logger.success(`Adults validation passed | Expected: ${expectedAdults}`);
     }
     if(expectedChildren!==undefined&&expectedChildren>0) {
         expect(lower.includes(`${expectedChildren} child`) || lower.includes(`${expectedChildren} children`)).to.be.true;
+        logger.success(`Children validation passed | Expected: ${expectedChildren}`);
     } 
     else {
-        cy.log("No children selected");
+        logger.info("No children selected");
     }
 }
 }

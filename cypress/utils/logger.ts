@@ -16,7 +16,7 @@ export class logger{
         Cypress.log({
             name:'STEP',
             message
-        });
+        }); // add counter step1-step2
     }
     static success(message:string){
         Cypress.log({
@@ -28,19 +28,19 @@ export class logger{
         Cypress.log({
             name:'FILTER',
             message
-        });
+        }); //Remove
     }
     static search(message:string){
         Cypress.log({
             name:'SEARCH',
             message
-        });
+        });//Remove
     }
     static assertion(message:string){
         Cypress.log({
             name:'ASSERTION',
             message
-        });
+        }); //Choose one validation/assertion
     }
     static validation(message:string){
         Cypress.log({

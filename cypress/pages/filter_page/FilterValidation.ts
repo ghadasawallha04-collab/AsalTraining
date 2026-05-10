@@ -69,7 +69,7 @@ validateCardFilters(filters:Record<string,any>,cardIndex: number=0) {
  * @param filterName - Name of the filter used for logging and error messages
  */
 assertBedroomsBathrooms(value:{bedrooms?:number;bathrooms?:number},validationErrors:string[],filterName: string){
-    cy.get(PROPERTY_CARD_UNIT_CONFIGURATION.selector!).invoke('text').then(text=>{
+    cy.get(PROPERTY_CARD_UNIT_CONFIGURATION.selector!,{timeout:3000}).invoke('text').then(text=>{
         const bedroomMatch=text.match(/(\d+)\s*bedroom/);
         const bathroomMatch=text.match(/(\d+)\s*bathroom/);
         const bedrooms=bedroomMatch?Number(bedroomMatch[1]):0;

@@ -39,3 +39,8 @@ export const RATING_STARS:Readonly<PageElement>={
     testId:null,
     displayText:null
 };
+export const PROPERTY_CARD_AFTER_FILTERS: Readonly<PageElement>={
+    selector:'[data-testid="property-card"]',
+    testId:null,
+    displayText:null
+};

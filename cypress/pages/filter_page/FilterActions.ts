@@ -1,4 +1,4 @@
-import { FILTER_GROUP,BEDROOM_STEPPER,BATHROOM_STEPPER,STEPPER_VALUE} from "./FilterElements";
+import { FILTER_GROUP,BEDROOM_STEPPER,BATHROOM_STEPPER,STEPPER_VALUE,PROPERTY_CARD_AFTER_FILTERS} from "./FilterElements";
 import { HtmlTags } from "../../utils/htmlTags";
 import { FILTER_NAMES } from "./FilterConstants"; 
 import { logger } from "../../utils/logger";
@@ -68,7 +68,7 @@ setRooms(type:"Bedrooms"|"Bathrooms",count:number){
    */
 applyAllFilters(filters: Record<string, any>) {
     logger.step("Applying all filters");
-    cy.intercept('GET','**searchresults*').as('searchResults');
+    cy.intercept('**searchresults*').as('searchResults');
     for(const filterName in filters){
         const value=filters[filterName];
         if(filterName===FILTER_NAMES.BEDROOM_BATHROOM){
@@ -87,6 +87,7 @@ applyAllFilters(filters: Record<string, any>) {
         }
     }
     cy.wait('@searchResults');
+    cy.get(PROPERTY_CARD_AFTER_FILTERS.selector!).filter(':visible').should('have.length.greaterThan', 0);
     cy.get('@searchResults.all').then((requests:any)=>{
         logger.validation(`Total search requests: ${requests.length}`);
         requests.forEach((request:any,index:number)=>{

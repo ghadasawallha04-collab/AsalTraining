@@ -4,5 +4,6 @@ export enum HtmlTags {
   SELECT="select",
   LABEL="label",
   DIV="div",
-  H3="h3"
+  H3="h3",
+  TR="tr"
 }

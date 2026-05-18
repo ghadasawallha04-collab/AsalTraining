@@ -16,23 +16,29 @@ export class HotelActions{
         logger.step("Opening first property");
         cy.get(PROPERTY_CARD.selector!).filter(':visible').first().find(PROPERTY_CARD_TITLE_LINK.selector!).invoke('removeAttr', 'target').click();
     }
-    /**
-     * Finds a room that matches the provided search data
-     * and performs reservation.
-     * 
-     * Matching can include:
-     * - Room type
-     * - Number of guests
-     * - Rate options
-     * 
-     * Steps:
-     * 1. Loop through all room rows
-     * 2. Validate room conditions
-     * 3. Select one room
-     * 4. Click reserve button
-     * 
-     * @param searchData - Object containing room search conditions
-     */
+/**
+ * Finds and reserves the first room that matches
+ * the provided search conditions.
+ * 
+ * Supported matching conditions:
+ * - Room type
+ * - Number of guests (optional)
+ * - Rate options (optional)
+ * 
+ * Steps:
+ * 1. Loop through all available room types
+ * 2. Check if room type matches the requested room
+ * 3. Loop through rows related to the matched room type
+ * 4. Validate guests count if provided
+ * 5. Validate rate options if provided
+ * 6. Save the first matching room row
+ * 7. Select the room and click reserve
+ * 
+ * Throws:
+ * - Error if no matching room is found
+ * 
+ * @param searchData - Object containing room search criteria
+ */
 findRoom(searchData:RoomData){
     logger.step("Searching for room");
     let matchedGuestRow: JQuery<HTMLElement> | null = null;

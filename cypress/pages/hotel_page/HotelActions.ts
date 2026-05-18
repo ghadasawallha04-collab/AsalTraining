@@ -1,4 +1,4 @@
-import {PROPERTY_CARD,PROPERTY_CARD_TITLE_LINK,ROOM_ROW,RESERVE_BUTTON} from "./HotelElements";
+import {PROPERTY_CARD,PROPERTY_CARD_TITLE_LINK,RESERVE_BUTTON,ROOM_TYPE,ROOM_TYPE_ROW,GUEST_ICONS,RATE_OPTIONS} from "./HotelElements";
 import { logger } from "../../utils/logger";
 import { RoomData } from "./HotelModals";
 import { HtmlTags } from "../../utils/htmlTags";
@@ -33,41 +33,58 @@ export class HotelActions{
      * 
      * @param searchData - Object containing room search conditions
      */
-    findRoom(searchData:RoomData) {
-        logger.step("Searching for room");
-        cy.get(ROOM_ROW.selector!).each(($row,index)=>{
-            const rowText=$row.text().toLowerCase();
-            logger.info(`Checking row:${index}`);
-            let matched=true;
-            if(searchData.roomType) {
-                const roomTypeMatched =rowText.includes(searchData.roomType.toLowerCase());
-                logger.validation(`Room type matched: ${roomTypeMatched}`);
-            if(!roomTypeMatched) {
-                matched =false;
+findRoom(searchData:RoomData){
+    logger.step("Searching for room");
+    let matchedGuestRow: JQuery<HTMLElement> | null = null;
+    let roomFound=false;
+    //Check for Room Type
+    cy.get(ROOM_TYPE.selector!).each(($roomType,index)=>{
+        if(roomFound){
+             return false;
             }
-        }
-        if(searchData.guests){
-            const guestsMatched =rowText.includes(searchData.guests.toString());
-            logger.validation(`Guests matched: ${guestsMatched}`);
-            if(!guestsMatched){
-                matched=false;
+            const actualRoomType =$roomType.text().trim().toLowerCase();
+            logger.info(`Checking room: ${index}`);
+            logger.info(`Actual room type: ${actualRoomType}`);
+            if (!actualRoomType.includes(searchData.roomType!.toLowerCase())) {
+                return;
             }
-        }
-        if(searchData.rateOptions){
-            const rateOptionsMatched=searchData.rateOptions.every(option =>rowText.includes(option.toLowerCase()));
-            logger.validation(`Rate options matched: ${rateOptionsMatched}`);
-            if(!rateOptionsMatched){
-                matched=false;
+            logger.success(`Requested room type matched: ${actualRoomType}`);
+            //For Each Room Type Check Number of Guests and Rate options
+            cy.wrap($roomType).closest(HtmlTags.TR).nextUntil(ROOM_TYPE_ROW.selector!).each(($guestRow)=>{
+                if(roomFound){
+                    return false;
+                }
+                const actualGuests=$guestRow.find(GUEST_ICONS.selector!).length;
+                logger.info(`Actual guests: ${actualGuests}`);
+                if (searchData.guests!==undefined) {
+                if(actualGuests!==searchData.guests) {
+                    return;
+                }
+                logger.success(`Guests matched: ${actualGuests} guests`);
             }
-        }
-        if(matched){
-            logger.success("Matching room found");
-            cy.wrap($row).within(()=>{
-                cy.get(HtmlTags.SELECT).select('1');
+                const rateText=$guestRow.find(RATE_OPTIONS.selector!).text().toLowerCase();
+                logger.info(`Rate text: ${rateText}`);
+                if (searchData.rateOptions!==undefined){
+                const rateMatched=searchData.rateOptions.every(option=>rateText.includes(option.toLowerCase()));
+                logger.validation(`Rate matched: ${rateMatched}`);
+                if(!rateMatched){
+                    return;
+                }
+                logger.success(`Matched rate options:${searchData.rateOptions?.join(', ')}`);
+            }
+                matchedGuestRow=$guestRow;
+                roomFound=true;
+                return false;
             });
-            cy.get(RESERVE_BUTTON.selector!).filter(':visible').first().click();
-            return false;
-        }
+        }).then(()=>{
+            if(!matchedGuestRow){
+                throw new Error(`No room matched the requested data:Room Type: ${searchData.roomType},Guests: ${searchData.guests},
+                Rate Options: ${searchData.rateOptions?.join(', ')}`);
+            }
+        cy.wrap(matchedGuestRow).find('select').select('1');
+        cy.get(RESERVE_BUTTON.selector!).filter(':visible').first().click();
+        logger.success(`Successfully reserved matching room: Room Type: ${searchData.roomType}, Guests: ${searchData.guests},
+        Rate Options: ${searchData.rateOptions?.join(', ')}`);
     });
 }
 }

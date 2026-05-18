@@ -16,7 +16,7 @@ describe('Booking reservation flow',() =>{
   const searchOptions={destination:"San Hotel",checkInDate:"2026-06-20",checkOutDate:"2026-06-22",
     occupancyData:{adults:2,children:[3,15],rooms:1}
   };
-  const RoomData={roomType:"Standard Double Room",guests:3,rateOptions:[]}
+  const RoomData={roomType:"Ghada"}
   search.performSearch(searchOptions);
   verify.verifyCardSearchDetails(searchOptions);
   hotel.openFirstProperty();

@@ -274,7 +274,8 @@ performSearch(searchOptions?:{destination?:string;checkInDate?:string;checkOutDa
     logger.search("Performing full search flow");
     this.setDestination(searchOptions?.destination);
     this.setCheckInAndCheckOutDates(searchOptions?.checkInDate,searchOptions?.checkOutDate);
-    this.setOccupancy(searchOptions?.occupancyData);
-    this.clickSearch();
+    this.setOccupancy(searchOptions?.occupancyData).then(()=>{
+        this.clickSearch();
+    });
 }
 }

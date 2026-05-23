@@ -42,12 +42,8 @@ export class HotelActions{
 findRoom(searchData:RoomData){
     logger.step("Searching for room");
     let matchedGuestRow: JQuery<HTMLElement> | null = null;
-    let roomFound=false;
     //Check for Room Type
     cy.get(ROOM_TYPE.selector!).each(($roomType,index)=>{
-        if(roomFound){
-             return false;
-            }
             const actualRoomType =$roomType.text().trim().toLowerCase();
             logger.info(`Checking room: ${index}`);
             logger.info(`Actual room type: ${actualRoomType}`);
@@ -57,9 +53,6 @@ findRoom(searchData:RoomData){
             logger.success(`Requested room type matched: ${actualRoomType}`);
             //For Each Room Type Check Number of Guests and Rate options
             cy.wrap($roomType).closest(HtmlTags.TR).nextUntil(ROOM_TYPE_ROW.selector!).each(($guestRow)=>{
-                if(roomFound){
-                    return false;
-                }
                 const actualGuests=$guestRow.find(GUEST_ICONS.selector!).length;
                 logger.info(`Actual guests: ${actualGuests}`);
                 if (searchData.guests!==undefined) {
@@ -79,7 +72,6 @@ findRoom(searchData:RoomData){
                 logger.success(`Matched rate options:${searchData.rateOptions?.join(', ')}`);
             }
                 matchedGuestRow=$guestRow;
-                roomFound=true;
                 return false;
             });
         }).then(()=>{

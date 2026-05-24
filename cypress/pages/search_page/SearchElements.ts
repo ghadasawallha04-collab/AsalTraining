@@ -15,11 +15,6 @@ export const OCCUPANCY_DROPDOWN:Readonly<PageElement>={
     testId:'[data-testid="occupancy-config"]',
     displayText:null
 };
-export const SEARCH_BUTTON:Readonly<PageElement>={
-    selector:'[type="submit"]',
-    testId:null,
-    displayText:null
-};
 export const PROPERTY_CARD:Readonly<PageElement>={
   selector:'[data-testid="property-card"]',
   testId:null,
@@ -34,4 +29,9 @@ export const PRICE_NIGHTS_INFO:Readonly<PageElement>={
   selector:'[data-testid="price-for-x-nights"]',
   testId:null,
   displayText:null
+};
+export const SEARCH_BOX={
+    selector:'[data-testid="searchbox-layout-wide"]',
+    testId:null,
+    displayText:null
 };

@@ -21,7 +21,6 @@ describe("Booking Filters functionality",()=>{
         const filters={
             [FILTER_NAMES.PROPERTY_RATING]: ['5 stars'],
             [FILTER_NAMES.REVIEW_SCORE] :['Wonderful: 9+'],
-          //  [FILTER_NAMES.BEDROOM_BATHROOM]: {bedrooms: 1,bathrooms: 3}
         };
         filter.applyAllFilters(filters);
         verify.validateCardFilters(filters);

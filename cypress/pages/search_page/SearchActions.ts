@@ -1,5 +1,5 @@
 ///<reference types="cypress" />
-import { DESTINATION_SEARCH_INPUT,SUGGESTION_OPTIONS, OCCUPANCY_DROPDOWN,SEARCH_BUTTON } from "./SearchElements";
+import { DESTINATION_SEARCH_INPUT,SUGGESTION_OPTIONS, OCCUPANCY_DROPDOWN,SEARCH_BOX } from "./SearchElements";
 import { Occupancy } from "./SearchModels";
 import { getElement } from "../../utils/elementHelpers";
 import { getRandomItemFromArray,getRandomDates,getRandomNumber } from "../../utils/randomizers"; 
@@ -246,7 +246,7 @@ export class SearchActions{
  */
     clickSearch(){
         logger.search("Clicking on search button");
-        getElement(SEARCH_BUTTON).should('be.visible').click();
+        getElement(SEARCH_BOX).find('button[type="submit"]').should('be.visible').click();
         logger.success("Search submitted successfully");
     }
     /**

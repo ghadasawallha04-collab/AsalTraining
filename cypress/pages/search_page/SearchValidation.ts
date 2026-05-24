@@ -33,10 +33,8 @@ verifyCardSearchDetails(searchOptions:any,cardIndex: number=0){
                 expect(normalize(actualDestinationName)).to.contain(normalize(destination));
                 logger.success(`Destination validation passed | Actual: ${actualDestinationName} | Expected: ${destination}`);
             });
-            cy.get(PRICE_NIGHTS_INFO.selector!).should('be.visible').invoke('text').then((text)=>{ 
-                this.assertNightsAndOccupancy(text,checkInDate,checkOutDate,expectedAdults,expectedChildren);
-         });
-    });
+                this.assertNightsAndOccupancy(checkInDate,checkOutDate,expectedAdults,expectedChildren);
+        });
 }
 /**
  * Validates nights and occupancy details (adults and children) in a property card.
@@ -50,13 +48,13 @@ verifyCardSearchDetails(searchOptions:any,cardIndex: number=0){
  * 5. Validate the number of children if greater than zero
  * 6. Skip children validation if no children are selected
  *
- * @param text - Text extracted from the card (contains nights and occupancy info)
  * @param checkInDate - Check-in date used to calculate number of nights
  * @param checkOutDate - Check-out date used to calculate number of nights
  * @param expectedAdults - Expected number of adults (optional)
  * @param expectedChildren - Expected number of children (optional)
  */
-assertNightsAndOccupancy(text:string,checkInDate:string,checkOutDate:string,expectedAdults?:number,expectedChildren?:number) {
+assertNightsAndOccupancy(checkInDate:string,checkOutDate:string,expectedAdults?:number,expectedChildren?:number) {
+    cy.get(PRICE_NIGHTS_INFO.selector!).should('be.visible').invoke('text').then((text)=>{
     const lower=text.toLowerCase();
     const nights=(new Date(checkOutDate).getTime()-new Date(checkInDate).getTime())/(1000*60*60*24);
     logger.validation(`Expected nights: ${nights}`);
@@ -64,6 +62,7 @@ assertNightsAndOccupancy(text:string,checkInDate:string,checkOutDate:string,expe
     logger.validation(`Expected children: ${expectedChildren}`);
     logger.validation(`Actual card data: ${lower}`);
     expect(lower.includes(`${nights} night`) || lower.includes(`${nights} nights`)).to.be.true;
+    
     logger.success(`Nights validation passed | Expected: ${nights}`);
     if(expectedAdults!== undefined){
         expect(lower.includes(`${expectedAdults} adult`) || lower.includes(`${expectedAdults} adults`)).to.be.true;
@@ -73,8 +72,10 @@ assertNightsAndOccupancy(text:string,checkInDate:string,checkOutDate:string,expe
         expect(lower.includes(`${expectedChildren} child`) || lower.includes(`${expectedChildren} children`)).to.be.true;
         logger.success(`Children validation passed | Expected: ${expectedChildren}`);
     } 
+    
     else {
         logger.info("No children selected");
     }
+    });
 }
 }

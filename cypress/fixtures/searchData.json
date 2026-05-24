@@ -10,7 +10,7 @@
     }
   },
   {
-    "destination": "Capella Bangkok",
+    "destination": "لندن",
     "checkInDate": "2026-06-07",
     "checkOutDate": "2026-06-08",
     "occupancyData": {
@@ -20,7 +20,7 @@
     }
   },
   {
-    "destination": "Eiffel Tower",
+    "destination": "Capella Bangkok",
     "checkInDate": "2026-06-09",
     "checkOutDate": "2026-06-18",
     "occupancyData": {
@@ -40,7 +40,7 @@
     }
   },
   {
-    "destination": "Paris",
+    "destination": "Eiffel Tower",
     "checkInDate": "2026-06-07",
     "checkOutDate": "2026-06-09",
     "occupancyData": {
@@ -50,32 +50,12 @@
     }
   },
   {
-    "destination": "Dubai",
+    "destination": "برج إيفل",
     "checkInDate": "2026-06-05",
-    "checkOutDate": "2026-06-12",
+    "checkOutDate": "2026-06-11",
     "occupancyData": {
       "adults": 3,
       "children": [5],
-      "rooms": 2
-    }
-  },
-  {
-    "destination": "New York",
-    "checkInDate": "2026-06-15",
-    "checkOutDate": "2026-06-20",
-    "occupancyData": {
-      "adults": 2,
-      "children": [7, 12],
-      "rooms": 1
-    }
-  },
-  {
-    "destination": "Tokyo",
-    "checkInDate": "2026-06-03",
-    "checkOutDate": "2026-06-14",
-    "occupancyData": {
-      "adults": 4,
-      "children": [],
       "rooms": 2
     }
   }

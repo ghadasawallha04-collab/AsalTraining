@@ -24,7 +24,7 @@ describe('Search Functionality Sanity Tests',() =>{
     });
   });
  it("Should show validation when perform search and destination is empty",()=>{
-    cy.contains("Check-in date").click();
+    cy.contains("Check-in date").click();// cy contains: make it in a separate function
     search.setCheckInAndCheckOutDates("2026-06-22","2026-06-24");
     search.setOccupancy({
         adults:2,

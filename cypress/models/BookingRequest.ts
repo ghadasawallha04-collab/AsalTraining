@@ -11,13 +11,13 @@ export const createBookingBody={
 };
 
 export const updateBookingBody={
-    firstname:"Ghada",
-    lastname:"Updated",
-    totalprice:900,
-    depositpaid:true,
-    bookingdates:{
-        checkin:"2026-06-10",
-        checkout:"2026-06-15"
+    "firstname":"Ghada",
+    "lastname":"Updated",
+    "totalprice":600,
+    "depositpaid":true,
+    "bookingdates":{
+        "checkin":"2026-06-02",
+        "checkout":"2026-06-05"
     },
-    additionalneeds:"Dinner"
+    "additionalneeds":"Breakfast"
 };

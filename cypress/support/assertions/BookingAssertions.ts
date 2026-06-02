@@ -1,5 +1,5 @@
-import { BookingRequest } from "../models/BookingRequest";
-import { logger } from "../utils/logger";
+import { BookingRequest } from "../../models/BookingRequest";
+import { logger } from "../../utils/logger";
 export class BookingAssertions{
     static validateBookingData(actual:BookingRequest,expected:BookingRequest){
         const errors:string[]=[];

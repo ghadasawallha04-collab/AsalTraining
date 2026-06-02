@@ -1,7 +1,7 @@
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
-  allowCypressEnv: false,
+  allowCypressEnv: true,
   viewportWidth: 1536,
   viewportHeight: 960,
   e2e: {
@@ -14,4 +14,8 @@ module.exports = defineConfig({
     },
      specPattern: '**/*.spec.ts'
   },
+    env:{
+    username:"admin",
+    password:"password123"
+  }
 });

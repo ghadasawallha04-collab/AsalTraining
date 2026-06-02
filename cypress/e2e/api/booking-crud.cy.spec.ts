@@ -1,41 +1,53 @@
-import { BookingApi } from "../../support/api/BookingApi";
-import { createBookingBody,updateBookingBody } from "../../models/BookingRequest";
-describe("Booking Api testing",()=>{
+import { BookingApi }from "../../support/api/BookingApi";
+import { BookingDataGenerator }from "../../models/BookingDataGenerator";
+import { BookingAssertions } from "../../support/BookingAssertions";
+import { StatusCodes } from "../../support/StatusCodes";
+import { logger } from "../../utils/logger";
+describe("Booking CRUD API",()=>{
     const bookingApi=new BookingApi();
     let bookingId:number;
-    let firstName:string;
-    let lastName:string;
     let token:string;
-    it("Should create update and delete booking",()=>{
-        //Create a new booking
+    const createBookingBody=BookingDataGenerator.createBooking();
+    const updateBookingBody=BookingDataGenerator.createBooking();
+    it("Should Create Booking",()=>{
         bookingApi.createBooking(createBookingBody).then((response)=>{
-        expect(response.status).to.eq(200);
-        bookingId=response.body.bookingid;
-        firstName=response.body.booking.firstname;
-        lastName=response.body.booking.lastname;
-        expect(response.body.booking.firstname).to.eq(createBookingBody.firstname);
-        expect(response.body.booking.lastname).to.eq(createBookingBody.lastname);
-        expect(response.body.booking.totalprice).to.eq(createBookingBody.totalprice);
-        //Retrieve the created booking
-        bookingApi.getBooking(bookingId).then((response)=>{
-            expect(response.status).to.eq(200);
-            expect(response.body.firstname).to.eq(firstName);
-            expect(response.body.lastname).to.eq(lastName);
-            //Generate an authentication token
-            bookingApi.generateToken().then((response)=>{
-                expect(response.status).to.eq(200);
-                token=response.body.token;
-                expect(response.body.token).to.exist;
-                //Update the booking details
-                bookingApi.updateBooking(bookingId,token,updateBookingBody).then((response)=>{
-                    expect(response.status).to.eq(200);
-                    expect(response.body.firstname).to.eq(updateBookingBody.firstname);
-                    expect(response.body.lastname).to.eq(updateBookingBody.lastname);
-});
-});
+            logger.info("Verifying status code should be OK");
+            expect(response.status).to.eq(StatusCodes.OK);
+            bookingId=response.body.bookingid;
+            BookingAssertions.validateBookingData(response.body.booking,createBookingBody);
+        });
     });
-    
-
-});
-});
-});
+    it("Should Get Booking",()=>{
+        bookingApi.getBooking(bookingId).then((response)=>{
+            logger.info("Verifying status code should be OK");
+            expect(response.status).to.eq(StatusCodes.OK);
+            BookingAssertions.validateBookingData(response.body,createBookingBody);
+        });
+    });
+    it("Should Generate Token",() => {
+        bookingApi.generateToken().then((response)=>{
+            logger.info("Verifying status code should be OK");
+            expect(response.status).to.eq(StatusCodes.OK);
+            token=response.body.token;
+        });
+    });
+    it("Should Update Booking",()=>{
+        bookingApi.updateBooking(bookingId,updateBookingBody,token).then((response)=>{
+            logger.info("Verifying status code should be OK");
+            expect(response.status).to.eq(StatusCodes.OK);
+            BookingAssertions.validateBookingData(response.body,updateBookingBody);
+        });
+    });
+    it("Should Delete Booking",()=>{
+        bookingApi.deleteBooking(bookingId,token).then((response)=>{
+            logger.info("Verifying status code should be CREATED");
+            expect(response.status).to.eq(StatusCodes.CREATED);
+        });
+    });
+    it("Should Not Retrieve Deleted Booking",()=>{
+        bookingApi.verifyDeletedBooking(bookingId).then((response)=>{
+        logger.info("Verifying status code should be NOT FOUND");
+        expect(response.status).to.eq(StatusCodes.NOT_FOUND);
+        });
+    });
+    });

@@ -6,7 +6,7 @@ import { logger } from "../../utils/logger";
 describe("Booking CRUD API",()=>{
     const bookingApi=new BookingApi();
     let bookingId:number;
-    let token:string;
+    let token:string; 
     const createBookingBody=BookingDataGenerator.createBooking();
     const updateBookingBody=BookingDataGenerator.createBooking();
     it("Should Create Booking",()=>{

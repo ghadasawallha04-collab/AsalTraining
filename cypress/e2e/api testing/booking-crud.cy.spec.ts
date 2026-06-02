@@ -1,7 +1,7 @@
 import { BookingApi }from "../../support/api/BookingApi";
 import { BookingDataGenerator }from "../../models/BookingDataGenerator";
-import { BookingAssertions } from "../../support/BookingAssertions";
-import { StatusCodes } from "../../support/StatusCodes";
+import { BookingAssertions } from "../../support/assertions/BookingAssertions";
+import { StatusCodes } from "../../support/constants/StatusCodes";
 import { logger } from "../../utils/logger";
 describe("Booking CRUD API",()=>{
     const bookingApi=new BookingApi();

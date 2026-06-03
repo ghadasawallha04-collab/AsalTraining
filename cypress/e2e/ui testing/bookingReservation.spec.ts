@@ -1,7 +1,7 @@
-import { BaseActions } from "../pages/base_page/BaseActions";
-import { HotelActions } from "../pages/hotel_page/HotelActions";
-import { SearchActions } from "../pages/search_page/SearchActions";
-import { SearchValidations } from "../pages/search_page/SearchValidation";
+import { BaseActions } from "../../pages/base_page/BaseActions";
+import { HotelActions } from "../../pages/hotel_page/HotelActions";
+import { SearchActions } from "../../pages/search_page/SearchActions";
+import { SearchValidations } from "../../pages/search_page/SearchValidation";
 describe('Booking reservation flow',() =>{
   const base=new BaseActions();
   const search=new SearchActions(); 

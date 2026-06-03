@@ -1,10 +1,10 @@
-import { BaseActions } from "../pages/base_page/BaseActions";
-import { SearchActions } from "../pages/search_page/SearchActions";
-import { FilterActions } from "../pages/filter_page/FilterActions";
-import { SearchValidations } from "../pages/search_page/SearchValidation";
-import { FilterValidations } from "../pages/filter_page/FilterValidation";
-import { FILTER_NAMES } from "../pages/filter_page/FilterConstants";
-import searchTestData from "../fixtures/searchData.json";
+import { BaseActions } from "../../pages/base_page/BaseActions";
+import { SearchActions } from "../../pages/search_page/SearchActions";
+import { FilterActions } from "../../pages/filter_page/FilterActions";
+import { SearchValidations } from "../../pages/search_page/SearchValidation";
+import { FilterValidations } from "../../pages/filter_page/FilterValidation";
+import { FILTER_NAMES } from "../../pages/filter_page/FilterConstants";
+import searchTestData from "../../fixtures/searchData.json";
 describe('Search Functionality Sanity Tests',() =>{
   const base=new BaseActions();
   const search=new SearchActions();

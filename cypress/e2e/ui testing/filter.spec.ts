@@ -1,8 +1,8 @@
-import { FilterActions } from "../pages/filter_page/FilterActions";
-import { BaseActions } from "../pages/base_page/BaseActions";
-import { SearchActions } from "../pages/search_page/SearchActions";
-import { FILTER_NAMES } from "../pages/filter_page/FilterConstants";
-import { FilterValidations } from "../pages/filter_page/FilterValidation";
+import { FilterActions } from "../../pages/filter_page/FilterActions";
+import { BaseActions } from "../../pages/base_page/BaseActions";
+import { SearchActions } from "../../pages/search_page/SearchActions";
+import { FILTER_NAMES } from "../../pages/filter_page/FilterConstants";
+import { FilterValidations } from "../../pages/filter_page/FilterValidation";
 const base=new BaseActions();
 const search=new SearchActions();
 const filter=new FilterActions();

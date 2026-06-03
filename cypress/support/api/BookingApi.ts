@@ -2,6 +2,10 @@ import { BookingRequest } from "../../models/BookingRequest";
 import { logger } from "../../utils/logger";
 export class BookingApi{
     private baseUrl="https://restful-booker.herokuapp.com";
+    /**
+     * Creates a new booking.
+     * @param body Booking request payload.
+     */
     createBooking(body:BookingRequest){
         logger.step(`Creating booking for ${body.firstname} ${body.lastname}`);
         return cy.request({
@@ -21,6 +25,10 @@ export class BookingApi{
             return response;
         });
     }
+    /**
+     * Retrieves booking details by booking ID.
+     * @param bookingId Booking identifier.
+     */
     getBooking(bookingId: number){
         logger.step(`Getting booking with ID ${bookingId}`);
         return cy.request({
@@ -31,6 +39,10 @@ export class BookingApi{
             return response;
         });
     }
+    /**
+     * Generates authentication token.
+     * Uses credentials stored in Cypress environment variables.
+     */
     generateToken(){
         logger.step("Generating authentication token");
         return cy.request({
@@ -45,6 +57,12 @@ export class BookingApi{
             return response;
         });
     }
+    /**
+     * Updates an existing booking.
+     * @param bookingId Booking identifier.
+     * @param body Updated booking payload.
+     * @param token Authentication token.
+     */
     updateBooking(bookingId:number,body:BookingRequest,token:string){
         logger.step(`Updating booking with ID ${bookingId}`);
         return cy.request({
@@ -59,7 +77,11 @@ export class BookingApi{
             return response;
         });
     }
-
+    /**
+     * Deletes a booking.
+     * @param bookingId Booking identifier.
+     * @param token Authentication token.
+     */
     deleteBooking(bookingId:number,token:string){
         logger.step(`Deleting booking with ID ${bookingId}`);
         return cy.request({
@@ -73,6 +95,11 @@ export class BookingApi{
             return response;
         });
     }
+    /**
+     * Verifies that a booking has been deleted.
+     * Expected result: 404 Not Found.
+     * @param bookingId Booking identifier.
+     */
     verifyDeletedBooking(bookingId:number) {
     logger.step(`Verifying booking ${bookingId} was deleted`);
     return cy.request({

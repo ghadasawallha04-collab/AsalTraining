@@ -38,6 +38,14 @@ export const getRandomDates=()=>{
 export const getRandomNumber=(min:number,max:number):number=>{
   return Math.floor(Math.random()*(max-min+1))+min;
 };
-
-
-
+/**
+ * Generates a date by adding a specified number of days to today's date.
+ * 
+ * @param daysToAdd - Number of days to add to the current date
+ * @returns Formatted date string in YYYY-MM-DD format
+ */
+export const generateRandomDateForApi=(daysToAdd:number):string=>{
+    const date=new Date();
+    date.setDate(date.getDate()+daysToAdd);
+    return date.toISOString().split("T")[0];
+};

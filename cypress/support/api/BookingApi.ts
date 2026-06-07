@@ -1,11 +1,14 @@
 import { BookingRequest } from "../../models/BookingRequest";
 import { logger } from "../../utils/logger";
+import { StatusCodes } from "../constants/StatusCodes";
+import { BookingResponse } from "../../models/BookingResponse";
 export class BookingApi{
     private baseUrl="https://restful-booker.herokuapp.com";
     /**
      * Creates a new booking.
      * @param body Booking request payload.
      */
+
     createBooking(body:BookingRequest){
         logger.step(`Creating booking for ${body.firstname} ${body.lastname}`);
         return cy.request({
@@ -13,30 +16,26 @@ export class BookingApi{
             url:`${this.baseUrl}/booking`,
             body
         }).then((response)=>{
-            logger.success(`Booking created successfully with ID ${response.body.bookingid}`);
-            const booking=response.body.booking;
-            logger.info(`Firstname: ${booking.firstname}`);
-            logger.info(`Lastname: ${booking.lastname}`);
-            logger.info(`Total Price: ${booking.totalprice}`);
-            logger.info(`Deposit Paid: ${booking.depositpaid}`);
-            logger.info(`Check-In: ${booking.bookingdates.checkin}`);
-            logger.info(`Check-Out: ${booking.bookingdates.checkout}`);
-            logger.info(`Additional Needs: ${booking.additionalneeds}`);
-            return response;
+            expect(response.status).to.eq(StatusCodes.OK);
+            const bookingResponse:BookingResponse=response.body;
+            logger.success(`Booking created successfully with ID ${bookingResponse.bookingid}`);
+            return bookingResponse;
         });
     }
     /**
      * Retrieves booking details by booking ID.
      * @param bookingId Booking identifier.
      */
-    getBooking(bookingId: number){
+    getBookingById(bookingId: number){
         logger.step(`Getting booking with ID ${bookingId}`);
         return cy.request({
             method:"GET",
             url:`${this.baseUrl}/booking/${bookingId}`
         }).then((response)=>{
+            expect(response.status).to.eq(StatusCodes.OK);
+            const bookingResponse:BookingRequest=response.body;
             logger.success(`Booking ${bookingId} retrieved successfully`);
-            return response;
+            return bookingResponse;
         });
     }
     /**
@@ -53,8 +52,10 @@ export class BookingApi{
             password:Cypress.env("password")
             }
         }).then((response)=>{
+            expect(response.status).to.eq(StatusCodes.OK);
+            const token=response.body.token;
             logger.success("Authentication token generated successfully");
-            return response;
+            return token;
         });
     }
     /**
@@ -73,8 +74,10 @@ export class BookingApi{
             },
             body
         }).then((response)=>{
+            expect(response.status).to.eq(StatusCodes.OK);
+            const bookingResponse:BookingRequest=response.body;
             logger.success(`Booking ${bookingId} updated successfully`);
-            return response;
+            return bookingResponse;
         });
     }
     /**
@@ -91,6 +94,7 @@ export class BookingApi{
                 Cookie:`token=${token}`
             }
         }).then((response)=>{
+            expect(response.status).to.eq(StatusCodes.CREATED);
             logger.success(`Booking ${bookingId} deleted successfully`);
             return response;
         });
@@ -106,6 +110,10 @@ export class BookingApi{
         method: "GET",
         url: `${this.baseUrl}/booking/${bookingId}`,
         failOnStatusCode: false
+    }).then((response)=>{
+    expect(response.status).to.eq(StatusCodes.NOT_FOUND);
+    logger.success(`Booking ${bookingId} was deleted successfully`);
+    return response;
     });
 }
 }
